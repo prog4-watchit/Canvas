@@ -12,7 +12,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
     let ctx, ctxDraw
 
     useEffect(() => {
-        console.log("Обновлен inputtext")
+      
         ctx = canvasRef.current.getContext('2d')
         ctxDraw = canvasRef2.current.getContext('2d')
         ctx.fillText(inputText.text, inputText.x, inputText.y);
@@ -36,6 +36,8 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                 setInputText(prev => ({ ...prev, text: "" }))
                 x = e.offsetX;
                 y = e.offsetY;
+
+            
 
                 setInputText(prev => ({ ...prev, x: x, y: y }))
                 ctx.closePath()
@@ -319,19 +321,22 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
 
         }
     }
-    console.log(inputText)
+ 
     return (
         <>
             <form onChange={(e) => {
-                console.log(e)
+               
 
             }}>
 
                 <canvas id="canvas2" ref={canvasRef2} width={canvasWidth} height={canvasHeight}
                     style={{ zIndex: current, width: canvasWidth, height: canvasHeight }}
-                    tabIndex='1' onKeyDown={e => {
-                        let i = inputText.text + e.key
-                        setInputText(prev => ({ ...prev, text: i }))
+                    tabIndex='1' onKeyDownCapture={e => {
+                        
+                        e.key.length > 1 ? void 0 : setInputText(prev => ({ ...prev, text: inputText.text + e.key}))
+                        
+                
+                       
                     }}
                 />
                 <canvas id="canvas1" ref={canvasRef} width={canvasWidth} height={canvasHeight}
