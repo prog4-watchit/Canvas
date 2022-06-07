@@ -10,55 +10,95 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
     const [current, setCurrent] = useState(10);
     const [inputText, setInputText] = useState({ text: "", x: "", y: "" })
     let ctx, ctxDraw
+    const [abc , setABC]  = useState()
+    const [fillStick , setFillStick]  = useState({id:null , active:false, x:null , y:null, text:""})
 
     useEffect(() => {
-      
+        
+
         ctx = canvasRef.current.getContext('2d')
         ctxDraw = canvasRef2.current.getContext('2d')
-        ctx.fillText(inputText.text, inputText.x, inputText.y);
+        
         handleDrawing()
 
-    }, [color, lineWidth, activeBtn, selectFillColor, inputText])
+        setTimeout(()=> {
+            if(activeBtn.text && fillStick.active){
+                ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+                setFillStick(prev => ({ ...prev, text:inputText, active: false }))
+                console.log(fillStick)
+                
+
+            }   
+            setABC(Math.random())
+        }, 1000)
+        
+    }, [color, lineWidth, activeBtn, selectFillColor, inputText, abc])
 
     const handleDrawing = () => {
 
 
 
         if (activeBtn.text) {
-
+            let interval
             setCurrent(10);
             let x, y
             ctx.fillStyle = color;
             
-
-            canvasRef2.current.onmousedown = (e) => {
+            // const showInput = () => {
+            //     let id = Math.random()
+            //         setInterval(() => {
+            //         })
+            //        ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+            //         interval = setTimeout( ()=> {
+            //             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+            //             ctxDraw.beginPath()
+            //             ctxDraw.moveTo(x, y)
+            //             ctxDraw.lineTo(x, y - 11);
+            //             ctxDraw.lineTo(x, y + 22)
+            //             ctxDraw.stroke()
+            //         }, 500)  
+            //     }               
+                
+            
+            canvasRef2.current.onmousedown = (e) => {           
+                ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
                 lineWidth <= 10 ? ctx.font = `10pt Arial` : ctx.font = `${lineWidth}pt Arial`
                 setInputText(prev => ({ ...prev, text: "" }))
                 x = e.offsetX;
                 y = e.offsetY;
-
-            
-
+                
+                // ctxDraw.beginPath()
+                // ctxDraw.moveTo(x, y)
+                // ctxDraw.lineTo(x, y - 19);
+                // ctxDraw.lineTo(x, y + 15)
+                // ctxDraw.stroke()
+                
+                setFillStick(prev => ({...prev, id:null , active:true, x:x , y:y}))
+                //showInput()
+                
+               
+                canvasRef2.current.onmousedown = null
                 setInputText(prev => ({ ...prev, x: x, y: y }))
                 ctx.closePath()
 
             }
 
             canvasRef2.current.onmousemove = (e) => {
-                ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-                ctxDraw.beginPath()
-                x = e.offsetX;
-                y = e.offsetY;
-                ctxDraw.moveTo(x, y)
-                ctxDraw.lineTo(x, y - 15);
-                ctxDraw.lineTo(x, y + 25)
-                ctxDraw.stroke()
-                ctxDraw.closePath()
+                // ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+                // ctxDraw.beginPath()
+                // x = e.offsetX;
+                // y = e.offsetY;
+                // ctxDraw.moveTo(x, y)
+                // ctxDraw.lineTo(x, y - 15);
+                // ctxDraw.lineTo(x, y + 25)
+                // ctxDraw.stroke()
+                // ctxDraw.closePath()
 
             }
 
             canvasRef2.current.onmouseup = (e) => {
                 ctxDraw.closePath()
+                
                 //canvasRef2.current.onmousemove = null
             }
             canvasRef2.current.onmouseleave = () => ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
@@ -299,9 +339,11 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             setCurrent(-1);
             ctx.clearRect(0, 0, canvasWidth, canvasHeight)
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+
             ctx.fillStyle = "#ffffff"
             ctx.fillRect(0, 0, canvasWidth, canvasHeight)
             setActiveBtn(prev => ({ ...prev, clean: false }))
+            setInputText(prev => ({ ...prev, text: ""}))
         }
         if (activeBtn.bgColor) {
             selectFillColor === undefined ? ctx.fillStyle = "#ffffff" : ctx.fillStyle = selectFillColor
@@ -310,7 +352,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             setActiveBtn(prev => ({ ...prev, bgColor: false }))
         }
         if (activeBtn.save) {
-
             let canvasUrl = canvasRef.current.toDataURL("image/jpeg", 1);
             const createEl = document.createElement('a');
             createEl.href = canvasUrl;
