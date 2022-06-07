@@ -5,7 +5,7 @@ import Canvas from "./Canvas/canvasSettings"
 function App() {
   return (
     <>
-      <Canvas width={600} height={220} />
+      <Canvas width={970} height={820} />
     </>
   );
 }

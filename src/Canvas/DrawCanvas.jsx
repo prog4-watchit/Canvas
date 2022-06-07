@@ -29,13 +29,13 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             setCurrent(10);
             let x, y
             ctx.fillStyle = color;
-            lineWidth <= 10 ? ctx.font = `10pt Arial` : ctx.font = `${lineWidth}pt Arial`
+            
 
             canvasRef2.current.onmousedown = (e) => {
+                lineWidth <= 10 ? ctx.font = `10pt Arial` : ctx.font = `${lineWidth}pt Arial`
                 setInputText(prev => ({ ...prev, text: "" }))
                 x = e.offsetX;
                 y = e.offsetY;
-
 
                 setInputText(prev => ({ ...prev, x: x, y: y }))
                 ctx.closePath()
@@ -57,7 +57,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
 
             canvasRef2.current.onmouseup = (e) => {
                 ctxDraw.closePath()
-
+                //canvasRef2.current.onmousemove = null
             }
             canvasRef2.current.onmouseleave = () => ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
         }
