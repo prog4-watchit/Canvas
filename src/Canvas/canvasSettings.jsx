@@ -15,7 +15,7 @@ function Canvas({ width = 600, height = 320 }) {
     const [selectFillColor, SetSelectFillColor] = useState()
     const [memoryColors, setMemoryColors] = useState({ fillColorMemory: "#ffffff", borderColorMemory: "#000000" })
     const [activeBtn, setActiveBtn] = useState({
-        pancil: false,
+        pancil: true,
         line: false,
         text: false,
         rectangle: false,

@@ -14,7 +14,7 @@
 }
 
 .canvas-bg {
-    background: #aebabe;
+   
     display:inline-flex !important;
 }
 
@@ -28,7 +28,14 @@
     position: relative;
     display: flex;
 }
-
+input[type="color"] {
+    width: 32px;
+    height: 21px;
+    border: none;
+    border-radius: 50%;
+    cursor:pointer;
+   
+}
 .text-end {
     position: relative;
     right: 100px;

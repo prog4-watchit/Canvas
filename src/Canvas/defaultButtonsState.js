@@ -53,18 +53,12 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
          id:"pancil",
          tooltip : "Редактировать",
          active : activeBtn.pancil,
-         inner: () => <i className="fas fa-pencil-alt" />,
+         inner: () => <i className="fas fa-pencil-alt " style={{
+            transform:"rotate(90deg)"
+         }} />,
          onClick : () => setActiveBtn({pancil:true}),
      
        },
-      //   {
-      //    id:"text",
-      //    tooltip : "Текст",
-      //    active : activeBtn.pancil,
-      //    inner: () => <i className="fas fa-font"></i>,
-      //    onClick : () => setActiveBtn({text:true}),
-     
-      //  },
        {
         id:"line",
         tooltip : "Линия",
@@ -94,7 +88,9 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
            id:"arrow",
            tooltip : "Стрелочка",
            active :activeBtn.arrow,
-           inner:() => <i className="fas fa-long-arrow-alt-up"></i>,
+           inner:() => <i className="fas fa-long-arrow-alt-up" style={{
+               transform:"rotate(-45deg)"
+            }}></i>,
            onClick : () => setActiveBtn({arrow:true}),
        },
        {

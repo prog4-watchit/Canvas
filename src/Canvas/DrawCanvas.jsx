@@ -10,29 +10,15 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
     const [current, setCurrent] = useState(10);
     const [inputText, setInputText] = useState({ text: "", x: "", y: "" })
     let ctx, ctxDraw
-    const [abc , setABC]  = useState()
-    const [fillStick , setFillStick]  = useState({id:null , active:false, x:null , y:null, text:""})
 
     useEffect(() => {
-        
-
+      
         ctx = canvasRef.current.getContext('2d')
         ctxDraw = canvasRef2.current.getContext('2d')
-        
+        ctx.fillText(inputText.text, inputText.x, inputText.y);
         handleDrawing()
 
-        setTimeout(()=> {
-            if(activeBtn.text && fillStick.active){
-                ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-                setFillStick(prev => ({ ...prev, text:inputText, active: false }))
-                console.log(fillStick)
-                
-
-            }   
-            setABC(Math.random())
-        }, 1000)
-        
-    }, [color, lineWidth, activeBtn, selectFillColor, inputText, abc])
+    }, [color, lineWidth, activeBtn, selectFillColor, inputText])
 
     const handleDrawing = () => {
 
@@ -44,40 +30,23 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             let x, y
             ctx.fillStyle = color;
             
-            // const showInput = () => {
-            //     let id = Math.random()
-            //         setInterval(() => {
-            //         })
-            //        ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-            //         interval = setTimeout( ()=> {
-            //             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-            //             ctxDraw.beginPath()
-            //             ctxDraw.moveTo(x, y)
-            //             ctxDraw.lineTo(x, y - 11);
-            //             ctxDraw.lineTo(x, y + 22)
-            //             ctxDraw.stroke()
-            //         }, 500)  
-            //     }               
-                
             
-            canvasRef2.current.onmousedown = (e) => {           
+            canvasRef2.current.onmousedown = (e) => {
                 ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
                 lineWidth <= 10 ? ctx.font = `10pt Arial` : ctx.font = `${lineWidth}pt Arial`
                 setInputText(prev => ({ ...prev, text: "" }))
                 x = e.offsetX;
                 y = e.offsetY;
-                
-                // ctxDraw.beginPath()
-                // ctxDraw.moveTo(x, y)
-                // ctxDraw.lineTo(x, y - 19);
-                // ctxDraw.lineTo(x, y + 15)
-                // ctxDraw.stroke()
-                
-                setFillStick(prev => ({...prev, id:null , active:true, x:x , y:y}))
-                //showInput()
-                
+                ctxDraw.lineWidth=2
+                ctxDraw.beginPath()
+                ctxDraw.moveTo(x, y)
+                ctxDraw.lineTo(x, y - 19);
+                ctxDraw.lineTo(x, y + 15)
+                ctxDraw.stroke()
+
                
-                canvasRef2.current.onmousedown = null
+               
+
                 setInputText(prev => ({ ...prev, x: x, y: y }))
                 ctx.closePath()
 
