@@ -87,10 +87,10 @@ input[type="color"] {
 
 
 .up::before {
-    transform: rotate(334deg);
+    transform: rotate(329deg);
     position: absolute;
-    width: 85%;
-    height: 52%;
+    width: 25px;
+    height: 16px;
     content: "";
     border-bottom: 1px solid #FF0000;
     pointer-events: none;

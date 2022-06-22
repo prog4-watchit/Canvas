@@ -8,6 +8,7 @@ import canvasTxt from 'canvas-txt'
 function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, canvasWidth, canvasHeight }) {
     const canvasRef = useRef()
     const canvasRef2 = useRef()
+    const canvasRef3 = useRef()
     const [current, setCurrent] = useState(10);
     const [inputText, setInputText] = useState({ text: "", x: null, y: null })
     const [PrevInputText, PrevSetInputText] = useState({ text: "", x: null, y: null })
@@ -40,10 +41,10 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
         ctx.fillStyle = color;
         ctx.fillText(PrevInputText.text, PrevInputText.x, PrevInputText.y)
 
-            PrevSetInputText(prev => ({...prev, text: "" , x:inputText.x , y:inputText.y }))
-            setInputText(prev => ({...prev, text: ""}))
+        PrevSetInputText(prev => ({...prev, text: "" , x:inputText.x , y:inputText.y }))
+        setInputText(prev => ({...prev, text: ""}))
 
-    }, [inputText.x , inputText.y])
+    }, [inputText.x , inputText.y ])
 
     useEffect(() => {
 
@@ -54,52 +55,42 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             PrevSetInputText({ text: "", x: null, y: null })
             setInputText({ text: "", x: null, y: null })
 
-    }, [activeBtn])
+    }, [activeBtn , lineWidth])
 
     const handleDrawing = () => {
+        
+        canvasRef2.current.onmousemove = null
+        canvasRef.current.onmousemove = null
+        canvasRef2.current.onmousedown = null
+        canvasRef.current.onmousedown = null
+        canvasRef2.current.onmouseup = null
+        canvasRef.current.onmouseup = null
 
         if (activeBtn.text) {
             setCurrent(10);
+            
             let x, y
             ctx.fillStyle = color;
             canvasRef2.current.onmousedown = (e) => {
                 ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-                lineWidth <= 10 ? ctx.font = `10pt Roboto` : ctx.font = `${lineWidth}pt Roboto`
-                // setInputText(prev => ({ ...prev, text: "" }))
+                ctxDraw.beginPath()
                 x = e.offsetX;
                 y = e.offsetY;
-                ctxDraw.lineWidth=2
-                ctxDraw.beginPath()
-                ctxDraw.moveTo(x, y)
-                ctxDraw.lineTo(x, y - 19);
-                ctxDraw.lineTo(x, y + 15)
-                ctxDraw.stroke()
+                setTimeout(()=> {
+                    ctxDraw.lineWidth=2
+                    ctxDraw.beginPath()
+                    ctxDraw.moveTo(x, y)
+                    ctxDraw.lineTo(x, y - 19);
+                    ctxDraw.lineTo(x, y + 15)
+                    ctxDraw.stroke()
+                }, 10)
+                
 
                 setInputText(prev => ({ ...prev, x: x, y: y }))
-                // PrevSetInputText(prev => ({ ...prev, x: x, y: y }))
-                ctx.closePath()
-
-            }
-
-            canvasRef2.current.onmousemove = (e) => {
-                // ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-                // ctxDraw.beginPath()
-                // x = e.offsetX;
-                // y = e.offsetY;
-                // ctxDraw.moveTo(x, y)
-                // ctxDraw.lineTo(x, y - 15);
-                // ctxDraw.lineTo(x, y + 25)
-                // ctxDraw.stroke()
-                // ctxDraw.closePath()
-
-            }
-
-            canvasRef2.current.onmouseup = (e) => {
                 ctxDraw.closePath()
-                
-                //canvasRef2.current.onmousemove = null
+
             }
-            //canvasRef2.current.onmouseleave = () => ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+
         }
         if (activeBtn.pancil) {
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
@@ -146,7 +137,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctxDraw.beginPath()
                     Rx = e.offsetX;
                     Ry = e.offsetY;
-
                     radius = Math.pow(Math.pow(x - Rx, 2) + Math.pow(y - Ry, 2), 0.5)
                     ctxDraw.arc(x + 10, y + 10, radius, 0, 2 * Math.PI)
                     ctxDraw.stroke()
@@ -158,7 +148,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     selectFillColor !== undefined ? ctx.fill() : void 0
                     ctx.stroke()
                     ctx.closePath()
-
                     canvasRef2.current.onmousemove = null
 
                 }
@@ -309,8 +298,10 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
                     let dx = tox - fromx;
                     let dy = toy - fromy;
-                    let headlen = Math.sqrt(dx * dx + dy * dy) / 3;
-                    headlen > 70 ? headlen = 70 : void 0
+                    let headlen = Math.sqrt(dx * dx + dy * dy) / 10;
+                    headlen > 50 ? headlen = 50 : void 0
+                    headlen < 10 ? headlen = 10 : void 0
+                    console.log(headlen)
                     let angle = Math.atan2(dy, dx);
                     tox -= Math.cos(angle) * ((lineWidth * 1.15));
                     toy -= Math.sin(angle) * ((lineWidth * 1.15));
@@ -342,6 +333,8 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
         if (activeBtn.clean) {
 
             setCurrent(-1);
+            ctx.closePath()
+            ctxDraw.closePath()
             ctx.clearRect(0, 0, canvasWidth, canvasHeight)
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
 

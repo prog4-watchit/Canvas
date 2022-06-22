@@ -88,7 +88,8 @@ function Canvas({ width = 600, height = 320 }) {
                     </div>
                     </div>
                 </div>
-                <div className="row mw-100 m-0">
+                 {/* интсрумент текст под canvas */}
+                {/* <div className="row mw-100 m-0">
                     <div className="col-12">
                         <div className="d-flex flex-end justify-content-end mt-1">
                             <div className="d-flex justify-content-end align-items-center" id={activeBtn.text ? "scaleZ" : ""}
@@ -97,10 +98,6 @@ function Canvas({ width = 600, height = 320 }) {
                                     minWidth: "30px",
                                     cursor: 'pointer',
                                     fontSize: "20px",
-                                    // borderTopLeftRadius: i === 0 ? "0.3rem" : "0",
-                                    // borderTopRightRadius: i === 0 ? "0.3rem" : "0",
-                                    // borderBottomLeftRadius: i === buttonsState.length - 1 ? "0.3rem" : "0",
-                                    // borderBottomRightRadius: i === buttonsState.length - 1 ? "0.3rem" : "0",
                                     color: "#71716f",
                                 }}
 
@@ -119,7 +116,7 @@ function Canvas({ width = 600, height = 320 }) {
 
                         </div>
                     </div>
-                </div>
+                </div> */}
 
             </div>
             <div className={width > 300 ? "col-1 ms-2 mt-4" : "col-3 ms-2 mt-4" + " "}>

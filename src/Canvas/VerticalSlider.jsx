@@ -11,7 +11,7 @@ export default function VerticalSlider({ setLineWidth, lineWidth }) {
     lineWidth > 0 ? lineWidth = lineWidth : lineWidth += 1
 
     return (
-        <Box sx={{ height: 240 }}>
+        <Box sx={{ height: 217 }}>
             <Slider
                 sx={{
                     '& input[type="range"]': {
