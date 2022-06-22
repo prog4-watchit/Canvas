@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import "./canvas.scss"
 import { useState } from 'react'
+import canvasTxt from 'canvas-txt'
 
 /*Функция отрисовки*/
 
@@ -8,33 +9,63 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
     const canvasRef = useRef()
     const canvasRef2 = useRef()
     const [current, setCurrent] = useState(10);
-    const [inputText, setInputText] = useState({ text: "", x: "", y: "" })
+    const [inputText, setInputText] = useState({ text: "", x: null, y: null })
+    const [PrevInputText, PrevSetInputText] = useState({ text: "", x: null, y: null })
+
     let ctx, ctxDraw
+    
+    
 
     useEffect(() => {
-      
         ctx = canvasRef.current.getContext('2d')
         ctxDraw = canvasRef2.current.getContext('2d')
-        ctx.fillText(inputText.text, inputText.x, inputText.y);
-        handleDrawing()
 
-    }, [color, lineWidth, activeBtn, selectFillColor, inputText])
+        ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+        lineWidth <= 10 ? ctxDraw.font = `10pt Roboto` : ctxDraw.font = `${lineWidth}pt Roboto`
+        ctxDraw.fillStyle = color;
+        ctxDraw.fillText(inputText.text, inputText.x, inputText.y);
+
+        console.log(inputText)
+        handleDrawing()      
+       
+    }, [color, lineWidth, activeBtn, selectFillColor, inputText.text])
+
+    useEffect(() => {
+        
+        ctx = canvasRef.current.getContext('2d')
+        ctxDraw = canvasRef2.current.getContext('2d')
+     
+
+        lineWidth <= 10 ? ctx.font = `10pt Roboto` : ctx.font = `${lineWidth}pt Roboto`
+        ctx.fillStyle = color;
+        ctx.fillText(PrevInputText.text, PrevInputText.x, PrevInputText.y)
+
+            PrevSetInputText(prev => ({...prev, text: "" , x:inputText.x , y:inputText.y }))
+            setInputText(prev => ({...prev, text: ""}))
+
+    }, [inputText.x , inputText.y])
+
+    useEffect(() => {
+
+            lineWidth <= 10 ? ctxDraw.font = `10pt Roboto` : ctxDraw.font = `${lineWidth}pt Roboto`
+            ctxDraw.fillStyle = color;
+
+            ctx.fillText(PrevInputText.text, PrevInputText.x, PrevInputText.y)
+            PrevSetInputText({ text: "", x: null, y: null })
+            setInputText({ text: "", x: null, y: null })
+
+    }, [activeBtn])
 
     const handleDrawing = () => {
 
-
-
         if (activeBtn.text) {
-            let interval
             setCurrent(10);
             let x, y
             ctx.fillStyle = color;
-            
-            
             canvasRef2.current.onmousedown = (e) => {
                 ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-                lineWidth <= 10 ? ctx.font = `10pt Arial` : ctx.font = `${lineWidth}pt Arial`
-                setInputText(prev => ({ ...prev, text: "" }))
+                lineWidth <= 10 ? ctx.font = `10pt Roboto` : ctx.font = `${lineWidth}pt Roboto`
+                // setInputText(prev => ({ ...prev, text: "" }))
                 x = e.offsetX;
                 y = e.offsetY;
                 ctxDraw.lineWidth=2
@@ -44,10 +75,8 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                 ctxDraw.lineTo(x, y + 15)
                 ctxDraw.stroke()
 
-               
-               
-
                 setInputText(prev => ({ ...prev, x: x, y: y }))
+                // PrevSetInputText(prev => ({ ...prev, x: x, y: y }))
                 ctx.closePath()
 
             }
@@ -70,11 +99,12 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                 
                 //canvasRef2.current.onmousemove = null
             }
-            canvasRef2.current.onmouseleave = () => ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
+            //canvasRef2.current.onmouseleave = () => ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
         }
         if (activeBtn.pancil) {
-
+            ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             setCurrent(-1);
+           
             canvasRef.current.onmousedown = (e) => {
                 ctx.closePath()
                 ctx.beginPath();
@@ -95,9 +125,10 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             }
         }
         if (activeBtn.circle) {
-
+            ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             ctxDraw.beginPath()
             setCurrent(10);
+            
             canvasRef2.current.onmousedown = (e) => {
                 ctxDraw.beginPath()
                 let x = e.offsetX, Rx, Ry, radius, y = e.offsetY;
@@ -135,8 +166,10 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             }
         }
         if (activeBtn.rectangle) {
+            ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             canvasRef2.current.onmousemove = null
             setCurrent(10);
+            ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
             canvasRef2.current.onmousedown = (e) => {
                 ctxDraw.beginPath()
                 let x = e.offsetX;
@@ -176,6 +209,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             ctxDraw.beginPath()
             setCurrent(-1);
+            ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
             canvasRef.current.onmousedown = (e) => {
                 ctx.closePath()
                 ctx.beginPath();
@@ -200,6 +234,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             ctxDraw.beginPath()
             setCurrent(10);
+            ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
             canvasRef2.current.onmousedown = (e) => {
 
                 ctx.closePath()
@@ -239,6 +274,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             ctxDraw.beginPath()
             setCurrent(10);
+            ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
             let fromx, fromy, tox, toy
 
             ctxDraw.lineCap = "round"
@@ -321,6 +357,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             setActiveBtn(prev => ({ ...prev, bgColor: false }))
         }
         if (activeBtn.save) {
+            ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
             let canvasUrl = canvasRef.current.toDataURL("image/jpeg", 1);
             const createEl = document.createElement('a');
             createEl.href = canvasUrl;
@@ -341,12 +378,14 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
 
                 <canvas id="canvas2" ref={canvasRef2} width={canvasWidth} height={canvasHeight}
                     style={{ zIndex: current, width: canvasWidth, height: canvasHeight }}
-                    tabIndex='1' onKeyDownCapture={e => {
-                        
-                        e.key.length > 1 ? void 0 : setInputText(prev => ({ ...prev, text: inputText.text + e.key}))
-                        
-                
-                       
+                    tabIndex='1' onKeyDownCapture={ e => {
+                        if (e.key.length > 1 ) {
+                            return
+                        } else {
+                            setInputText(prev => ({ ...prev, text: inputText.text + e.key})) 
+                            PrevSetInputText(prev => ({ ...prev, text: inputText.text + e.key})) 
+                        } 
+
                     }}
                 />
                 <canvas id="canvas1" ref={canvasRef} width={canvasWidth} height={canvasHeight}

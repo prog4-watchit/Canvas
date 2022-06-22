@@ -4,7 +4,7 @@ import Slider from '@mui/material/Slider';
 
 export default function VerticalSlider({ setLineWidth, lineWidth }) {
     function preventHorizontalKeyboardNavigation(event) {
-        console.log('value of slider', event.target.value)
+        
         event.target.value > 0 ? setLineWidth(event.target.value) : setLineWidth(event.target.value + 1)
         event.preventDefault();
     }
