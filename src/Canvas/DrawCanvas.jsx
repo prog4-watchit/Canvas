@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import "./canvas.scss"
 import { useState } from 'react'
 
-/*Функция отрисовки*/
+/* Функция отрисовки */
 
 function Canvas({ color, lineWidth, activeBtn, setActiveBtn, 
     selectFillColor, canvasWidth, canvasHeight , canvasPrev , setCanvasPrev , his }) {
@@ -11,16 +11,21 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
     const [current, setCurrent] = useState(10);
     const [inputText, setInputText] = useState({ text: "", x: null, y: null })
     const [PrevInputText, PrevSetInputText] = useState({ text: "", x: null, y: null })
+    const [qwid, setId] = useState(0)
 
     let ctx, ctxDraw
     const[history , setHistory] = useState(1)
 
+    useEffect(() => {
+        savePrevCanvasState()
+        
+    }, [])
    const savePrevCanvasState =() => {
-            setHistory(1)
+  
             let image = new Image();
             image.src = canvasRef.current.toDataURL("image/png");
-            if (history < 100) setCanvasPrev(prev => [...prev, image.src])
-           
+            if (history < 100) setCanvasPrev(prev => [...prev,  image.src  ])
+ 
     }
 
     useEffect(() => {
@@ -61,6 +66,11 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
             setInputText({ text: "", x: null, y: null })
 
     }, [activeBtn , lineWidth])
+
+    
+        
+    
+    
 
     const handleDrawing = () => {
         
@@ -116,7 +126,11 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.lineTo(x, y);
                     ctx.stroke()
                 }
-                canvasRef.current.onmouseup = () => { canvasRef.current.onmousemove = null; savePrevCanvasState() }
+                canvasRef.current.onmouseup = () => { 
+                     canvasRef.current.onmousemove = null;
+                     savePrevCanvasState() ;
+                     
+                }
                 canvasRef.current.onmouseleave = () => canvasRef.current.onmousemove = null
             }
         }
@@ -368,43 +382,47 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
 
         }
         if(activeBtn.forward){
-          //  setHistory(history < 1 ? 1 : history - 1)
-            setHistory(prev => prev < 1 ? 1 : prev -1)
+            console.log("было ",history)
+            
+          
            
 
-            let image = new Image();
-            image.src = canvasPrev[(canvasPrev.length - 1 - history ) < 0 ? 0 : canvasPrev.length - 1 - history]
+            // let image = new Image();
+            // image.src = canvasPrev[(canvasPrev.length - 1 - history ) < 0 ? 0 : canvasPrev.length - 1 - history]
             
            
-            image.onload = function() {
-                ctx.drawImage(image, 0, 0);
-            };
+            // image.onload = function() {
+            //     ctx.drawImage(image, 0, 0);
+            // };
             
-            setActiveBtn(prev => ({...prev , forward:false}) ) 
-            history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
+            // setActiveBtn(prev => ({...prev , forward:false}) ) 
+            // console.log("стало ",history)
+            // setHistory(prev => prev < 1 ? 1 : prev - 1)
         }
         if(activeBtn.back){
+            console.log("было ",history)
             
-            // console.log(history)
-            // console.log(canvasPrev)
-            // console.log(canvasPrev.length)
-            setHistory(prev => prev < 0 ? 1 : prev + 1)
-            history < 0 ? setHistory(1) : void 0
            
 
             let image = new Image();
-            image.src = canvasPrev[(canvasPrev.length - 1 - history) < 0 ? 0 : canvasPrev.length - 1 - history]
+            image.src = canvasPrev[(canvasPrev.length  - history -1) < 0 ? 0 : canvasPrev.length  - history -1]
             
               
             image.onload = function() {
                 ctx.drawImage(image, 0, 0);
             };
             setActiveBtn(prev => ({...prev , back:false}) )
-            history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
             //setCanvasPrev(canvasPrev.splice(-1,1))
+            console.log("стало ",history)
+           // setHistory(prev => prev > canvasPrev.length -2 ? canvasPrev.length : prev + 1)
+            //setHistory(prev => prev +1)
+            canvasPrev.length <= 2  ? void 0 :
+                setCanvasPrev(prev => prev.map((el, i) => (i === canvasPrev.length -1 ? null : el)).filter(el => el))
+            
         }
     }
-    console.log(history)
+     console.log(canvasPrev)
+   
     
     return (
         <>
