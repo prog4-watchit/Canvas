@@ -368,27 +368,28 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
 
         }
         if(activeBtn.forward){
+            console.log(history)
           //  setHistory(history < 1 ? 1 : history - 1)
             setHistory(prev => prev < 1 ? 1 : prev -1)
-           
+          
 
             let image = new Image();
-            image.src = canvasPrev[(canvasPrev.length - 1 - history ) < 0 ? 0 : canvasPrev.length - 1 - history]
+            image.src = canvasPrev[(canvasPrev.length  - history + 1 ) < 0 ? 0 : canvasPrev.length  - history + 1]
             
            
             image.onload = function() {
                 ctx.drawImage(image, 0, 0);
             };
-            
+             console.log(history)
             setActiveBtn(prev => ({...prev , forward:false}) ) 
             history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
+
+            
+            console.log(history)
         }
         if(activeBtn.back){
-            
-            // console.log(history)
-            // console.log(canvasPrev)
-            // console.log(canvasPrev.length)
-            setHistory(prev => prev < 0 ? 1 : prev + 1)
+
+           
             history < 0 ? setHistory(1) : void 0
            
 
@@ -402,6 +403,8 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
             setActiveBtn(prev => ({...prev , back:false}) )
             history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
             //setCanvasPrev(canvasPrev.splice(-1,1))
+            setHistory(prev => prev < 0 ? 1 : prev + 1)
+            console.log(history)
         }
     }
     console.log(history)
