@@ -96,9 +96,9 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
       },
       {
       id:"fillColor",
-      tooltip: "",
+      tooltip: "Залить фигуру",
       active: activeBtn.fillColor,
-      inner: ({isDisplayFill,  memoryColors, setMemoryColors , setIsDisplayFill  ,SetSelectFillColor ,fillColorMemory}) => 
+      inner: ({isDisplayFill,  memoryColors, setMemoryColors , setIsDisplayFill  ,SetSelectFillColor , fillColorMemory}) => 
       
        <div className=" pb-1" style={{
          position: "relative"
@@ -120,7 +120,7 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
                    />
                    
                 </div>
-                { isDisplayFill ? <i class="fas fa-times ps-1 text-danger" 
+                { isDisplayFill ? <i className="fas fa-times ps-1 text-danger" 
                          style= {{ fontSize:"1.2rem" ,
                                    cursor:"pointer" ,
                                    position:"absolute",
@@ -158,11 +158,13 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
         id:"bgColor",
         tooltip : "Залить фон",
         active :activeBtn.bgColor,
-        inner:() =>
-         <div className="text-center">
-            <i className="fas fa-solid fa-fill-drip"></i>
+        inner:({ isDisplayFill }) =>
+         <div className={`text-center ${isDisplayFill ? "" : "fill-fone-class"} `} onClick = {() => {
+            isDisplayFill ? setActiveBtn(prev =>({...prev, bgColor:true})) : void 0
+         }}>
+            <i className="fas fa-solid fa-fill-drip"> </i>
          </div>,
-        onClick : () => setActiveBtn(prev =>({...prev, bgColor:true}))
+        onClick : () => {}
     
     },
     

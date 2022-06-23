@@ -7,9 +7,10 @@ import VerticalSlider from "./VerticalSlider";
 import './canvas.scss'
 
 function Canvas({ width = 600, height = 320 }) {
-
+    let his = 1;
     const canvasWidth = width;
     const canvasHeight = height;
+    const [canvasPrev, setCanvasPrev] = useState([]);
     const [isDisplayFill, setIsDisplayFill] = useState(false);
     const [color, setColor] = useState("#000000")
     const [selectFillColor, SetSelectFillColor] = useState()
@@ -25,7 +26,8 @@ function Canvas({ width = 600, height = 320 }) {
         save: false,
         clean: false,
         bgColor: true,
-
+        forward: false,
+        back: false
     })
     const [lineWidth, setLineWidth] = useState(2);
     const [buttonsState, setButtonsState] = useState(DefaultButtonsState(activeBtn, setActiveBtn))
@@ -38,8 +40,23 @@ function Canvas({ width = 600, height = 320 }) {
             }}>
             
                 <div className="row mw-100  m-0">
-                    <div className="col-12 py-0 flex-end">
-                    <div className="d-flex justify-content-end">
+                    
+                        <div className="col-6  m-0 d-flex align-content-end flex-wrap">
+                            <div onClick ={() => setActiveBtn(prev => ({...prev , back:true}) )}>
+                                <Tooltip title={"Назад"} placement="bottom">
+                                    <span><i className="fas fa-reply canvas-condition pe-3"></i></span>
+                                </Tooltip>
+                            </div>
+                            <div onClick ={() => setActiveBtn(prev => ({...prev , forward:true}) )}>
+                                <Tooltip title={"Вперед"} placement="bottom">
+                                    <span><i className="fas fa-share canvas-condition"></i></span>
+                                </Tooltip>
+                            </div>
+                            
+                           
+                        </div>
+
+                        <div className="col-6 d-flex justify-content-end">
                             {
                                 buttonsState.
                                     filter(item => item.id === "save" || item.id === "clean").map((b, i) => (
@@ -67,7 +84,7 @@ function Canvas({ width = 600, height = 320 }) {
                                     ))
                             }
                         </div>
-                    </div>
+                   
                 </div>
                 <div className="row mw-100 ps-1 m-0"
                     style={{
@@ -76,6 +93,7 @@ function Canvas({ width = 600, height = 320 }) {
                     <div className="col-12 px-0">
                     <div className="canvas-body">
                         <UseCanvas
+                            his = {his}
                             color={color}
                             selectFillColor={selectFillColor}
                             lineWidth={lineWidth}
@@ -83,6 +101,8 @@ function Canvas({ width = 600, height = 320 }) {
                             setActiveBtn={setActiveBtn}
                             canvasWidth={canvasWidth}
                             canvasHeight={canvasHeight}
+                            canvasPrev = {canvasPrev}
+                            setCanvasPrev = {setCanvasPrev}
 
                         />
                     </div>
@@ -152,7 +172,7 @@ function Canvas({ width = 600, height = 320 }) {
                                                     }}
                                                     onClick={activeBtn[b.id] ? b.onOff : b.onClick}
                                                 >
-                                                    <Tooltip title={b.tooltip} placement="right">
+                                                    <Tooltip title={b.tooltip} placement= {b.id != "fillColor" ? "right" : "left"}>
                                                         <div>
                                                             {b.inner({ isDisplayFill, setIsDisplayFill, SetSelectFillColor, memoryColors, setMemoryColors, color, setColor })}
                                                         </div>

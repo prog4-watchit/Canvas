@@ -1,21 +1,27 @@
 import React, { useRef, useEffect } from 'react'
 import "./canvas.scss"
 import { useState } from 'react'
-import canvasTxt from 'canvas-txt'
 
 /*Функция отрисовки*/
 
-function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, canvasWidth, canvasHeight }) {
+function Canvas({ color, lineWidth, activeBtn, setActiveBtn, 
+    selectFillColor, canvasWidth, canvasHeight , canvasPrev , setCanvasPrev , his }) {
     const canvasRef = useRef()
     const canvasRef2 = useRef()
-    const canvasRef3 = useRef()
     const [current, setCurrent] = useState(10);
     const [inputText, setInputText] = useState({ text: "", x: null, y: null })
     const [PrevInputText, PrevSetInputText] = useState({ text: "", x: null, y: null })
 
     let ctx, ctxDraw
-    
-    
+    const[history , setHistory] = useState(1)
+
+   const savePrevCanvasState =() => {
+            setHistory(1)
+            let image = new Image();
+            image.src = canvasRef.current.toDataURL("image/png");
+            if (history < 100) setCanvasPrev(prev => [...prev, image.src])
+           
+    }
 
     useEffect(() => {
         ctx = canvasRef.current.getContext('2d')
@@ -26,7 +32,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
         ctxDraw.fillStyle = color;
         ctxDraw.fillText(inputText.text, inputText.x, inputText.y);
 
-        console.log(inputText)
         handleDrawing()      
        
     }, [color, lineWidth, activeBtn, selectFillColor, inputText.text])
@@ -111,7 +116,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctx.lineTo(x, y);
                     ctx.stroke()
                 }
-                canvasRef.current.onmouseup = () => canvasRef.current.onmousemove = null
+                canvasRef.current.onmouseup = () => { canvasRef.current.onmousemove = null; savePrevCanvasState() }
                 canvasRef.current.onmouseleave = () => canvasRef.current.onmousemove = null
             }
         }
@@ -149,6 +154,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctx.stroke()
                     ctx.closePath()
                     canvasRef2.current.onmousemove = null
+                 
 
                 }
                 canvasRef2.current.onmouseleave = () => canvasRef2.current.onmousemove = null
@@ -156,7 +162,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
         }
         if (activeBtn.rectangle) {
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
-            canvasRef2.current.onmousemove = null
             setCurrent(10);
             ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
             canvasRef2.current.onmousedown = (e) => {
@@ -190,6 +195,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctx.closePath()
 
                     canvasRef2.current.onmousemove = null
+                   
                 }
                 canvasRef2.current.onmouseleave = () => canvasRef2.current.onmousemove = null
             }
@@ -215,7 +221,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctx.lineTo(x, y);
                     ctx.stroke()
                 }
-                canvasRef.current.onmouseup = () => canvasRef.current.onmousemove = null
+                canvasRef.current.onmouseup = () =>{ canvasRef.current.onmousemove = null ;}
                 canvasRef.current.onmouseleave = () => canvasRef.current.onmousemove = null
             }
         }
@@ -253,6 +259,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctx.lineTo(xR, yR)
                     ctx.stroke()
                     canvasRef2.current.onmousemove = null
+                    
                 }
 
 
@@ -301,7 +308,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     let headlen = Math.sqrt(dx * dx + dy * dy) / 10;
                     headlen > 50 ? headlen = 50 : void 0
                     headlen < 10 ? headlen = 10 : void 0
-                    console.log(headlen)
                     let angle = Math.atan2(dy, dx);
                     tox -= Math.cos(angle) * ((lineWidth * 1.15));
                     toy -= Math.sin(angle) * ((lineWidth * 1.15));
@@ -324,6 +330,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
                     ctx.fill();
                     ctx.stroke();
                     canvasRef2.current.onmousemove = null
+                    
                 }
 
 
@@ -360,8 +367,45 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn, selectFillColor, ca
             setActiveBtn(prev => ({ ...prev, save: false }))
 
         }
+        if(activeBtn.forward){
+          //  setHistory(history < 1 ? 1 : history - 1)
+            setHistory(prev => prev < 1 ? 1 : prev -1)
+           
+
+            let image = new Image();
+            image.src = canvasPrev[(canvasPrev.length - 1 - history ) < 0 ? 0 : canvasPrev.length - 1 - history]
+            
+           
+            image.onload = function() {
+                ctx.drawImage(image, 0, 0);
+            };
+            
+            setActiveBtn(prev => ({...prev , forward:false}) ) 
+            history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
+        }
+        if(activeBtn.back){
+            
+            // console.log(history)
+            // console.log(canvasPrev)
+            // console.log(canvasPrev.length)
+            setHistory(prev => prev < 0 ? 1 : prev + 1)
+            history < 0 ? setHistory(1) : void 0
+           
+
+            let image = new Image();
+            image.src = canvasPrev[(canvasPrev.length - 1 - history) < 0 ? 0 : canvasPrev.length - 1 - history]
+            
+              
+            image.onload = function() {
+                ctx.drawImage(image, 0, 0);
+            };
+            setActiveBtn(prev => ({...prev , back:false}) )
+            history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
+            //setCanvasPrev(canvasPrev.splice(-1,1))
+        }
     }
- 
+    console.log(history)
+    
     return (
         <>
             <form onChange={(e) => {

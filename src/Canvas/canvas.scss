@@ -83,8 +83,16 @@ input[type="color"] {
     border-bottom: 1px solid #FF0000;
     pointer-events: none;
 }
-
-
+.canvas-condition{
+    font-size: 22px;
+    color:#71716f;
+    cursor: pointer;
+}
+.fill-fone-class{
+    opacity:0.7;
+    cursor:none;
+    pointer-events: none;
+}
 
 .up::before {
     transform: rotate(329deg);
