@@ -16,12 +16,14 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
     const[history , setHistory] = useState(1)
 
    const savePrevCanvasState =() => {
+    console.log('сохранение')
             setHistory(1)
             let image = new Image();
             image.src = canvasRef.current.toDataURL("image/png");
             if (history < 100) setCanvasPrev(prev => [...prev, image.src])
            
     }
+  
 
     useEffect(() => {
         ctx = canvasRef.current.getContext('2d')
@@ -48,6 +50,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
 
         PrevSetInputText(prev => ({...prev, text: "" , x:inputText.x , y:inputText.y }))
         setInputText(prev => ({...prev, text: ""}))
+        savePrevCanvasState()
 
     }, [inputText.x , inputText.y ])
 
@@ -93,7 +96,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
 
                 setInputText(prev => ({ ...prev, x: x, y: y }))
                 ctxDraw.closePath()
-
+               
             }
 
         }
@@ -154,7 +157,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.stroke()
                     ctx.closePath()
                     canvasRef2.current.onmousemove = null
-                 
+                    savePrevCanvasState();
 
                 }
                 canvasRef2.current.onmouseleave = () => canvasRef2.current.onmousemove = null
@@ -195,7 +198,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.closePath()
 
                     canvasRef2.current.onmousemove = null
-                   
+                    savePrevCanvasState();
                 }
                 canvasRef2.current.onmouseleave = () => canvasRef2.current.onmousemove = null
             }
@@ -221,7 +224,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.lineTo(x, y);
                     ctx.stroke()
                 }
-                canvasRef.current.onmouseup = () =>{ canvasRef.current.onmousemove = null ;}
+                canvasRef.current.onmouseup = () =>{ canvasRef.current.onmousemove = null ;savePrevCanvasState();}
                 canvasRef.current.onmouseleave = () => canvasRef.current.onmousemove = null
             }
         }
@@ -259,7 +262,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.lineTo(xR, yR)
                     ctx.stroke()
                     canvasRef2.current.onmousemove = null
-                    
+                    savePrevCanvasState();
                 }
 
 
@@ -330,7 +333,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.fill();
                     ctx.stroke();
                     canvasRef2.current.onmousemove = null
-                    
+                    savePrevCanvasState();
                 }
 
 
@@ -355,6 +358,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             ctx.fillRect(0, 0, canvasWidth, canvasHeight)
             setActiveBtn(prev => ({ ...prev, bgColor: false }))
+            savePrevCanvasState();
         }
         if (activeBtn.save) {
             ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
@@ -385,7 +389,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
             history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
 
             
-            console.log(history)
+            //console.log(history)
         }
         if(activeBtn.back){
 
@@ -403,11 +407,14 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
             setActiveBtn(prev => ({...prev , back:false}) )
             history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
             //setCanvasPrev(canvasPrev.splice(-1,1))
-            setHistory(prev => prev < 0 ? 1 : prev + 1)
-            console.log(history)
+            canvasPrev.length <= 2 || history > canvasPrev.length -2  ? void 0 : setHistory(prev => prev < 0 ? 1 : prev + 1)
+
+
         }
     }
-    console.log(history)
+    // console.log(history)
+    // console.log(canvasPrev)
+    
     
     return (
         <>
