@@ -5,19 +5,19 @@ import { useState } from 'react'
 /* Функция отрисовки */
 
 function Canvas({ color, lineWidth, activeBtn, setActiveBtn, 
-    selectFillColor, canvasWidth, canvasHeight , canvasPrev , setCanvasPrev , his }) {
+    selectFillColor, canvasWidth, canvasHeight , canvasPrev , setCanvasPrev  }) {
     const canvasRef = useRef()
     const canvasRef2 = useRef()
     const [current, setCurrent] = useState(10);
     const [inputText, setInputText] = useState({ text: "", x: null, y: null })
     const [PrevInputText, PrevSetInputText] = useState({ text: "", x: null, y: null })
-    const [qwid, setId] = useState(0)
+   
 
     let ctx, ctxDraw
     const[history , setHistory] = useState(1)
 
     useEffect(() => {
-        savePrevCanvasState()
+       // savePrevCanvasState()
         
     }, [])
    const savePrevCanvasState =() => {
@@ -53,6 +53,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
 
         PrevSetInputText(prev => ({...prev, text: "" , x:inputText.x , y:inputText.y }))
         setInputText(prev => ({...prev, text: ""}))
+        PrevInputText.text && PrevInputText.text != "" ? savePrevCanvasState() :void 0
 
     }, [inputText.x , inputText.y ])
 
@@ -68,10 +69,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
     }, [activeBtn , lineWidth])
 
     
-        
-    
-    
-
     const handleDrawing = () => {
         
         canvasRef2.current.onmousemove = null
@@ -168,7 +165,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.stroke()
                     ctx.closePath()
                     canvasRef2.current.onmousemove = null
-                 
+                    savePrevCanvasState();
 
                 }
                 canvasRef2.current.onmouseleave = () => canvasRef2.current.onmousemove = null
@@ -209,6 +206,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.closePath()
 
                     canvasRef2.current.onmousemove = null
+                    savePrevCanvasState();
                    
                 }
                 canvasRef2.current.onmouseleave = () => canvasRef2.current.onmousemove = null
@@ -235,7 +233,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.lineTo(x, y);
                     ctx.stroke()
                 }
-                canvasRef.current.onmouseup = () =>{ canvasRef.current.onmousemove = null ;}
+                canvasRef.current.onmouseup = () =>{ canvasRef.current.onmousemove = null ;savePrevCanvasState();}
                 canvasRef.current.onmouseleave = () => canvasRef.current.onmousemove = null
             }
         }
@@ -273,7 +271,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.lineTo(xR, yR)
                     ctx.stroke()
                     canvasRef2.current.onmousemove = null
-                    
+                    savePrevCanvasState();
                 }
 
 
@@ -344,7 +342,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.fill();
                     ctx.stroke();
                     canvasRef2.current.onmousemove = null
-                    
+                    savePrevCanvasState();
                 }
 
 
@@ -363,12 +361,14 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
             ctx.fillRect(0, 0, canvasWidth, canvasHeight)
             setActiveBtn(prev => ({ ...prev, clean: false }))
             setInputText(prev => ({ ...prev, text: ""}))
+            savePrevCanvasState();
         }
         if (activeBtn.bgColor) {
             selectFillColor === undefined ? ctx.fillStyle = "#ffffff" : ctx.fillStyle = selectFillColor
             ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
             ctx.fillRect(0, 0, canvasWidth, canvasHeight)
             setActiveBtn(prev => ({ ...prev, bgColor: false }))
+            savePrevCanvasState();
         }
         if (activeBtn.save) {
             ctxDraw.fillText(inputText.text, inputText.x, inputText.y)

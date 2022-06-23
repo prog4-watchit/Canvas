@@ -47,11 +47,11 @@ function Canvas({ width = 600, height = 320 }) {
                                     <span><i className="fas fa-reply canvas-condition pe-3"></i></span>
                                 </Tooltip>
                             </div>
-                            <div onClick ={() => setActiveBtn(prev => ({...prev , forward:true}) )}>
+                            {/* <div onClick ={() => setActiveBtn(prev => ({...prev , forward:true}) )}>
                                 <Tooltip title={"Вперед"} placement="bottom">
                                     <span><i className="fas fa-share canvas-condition"></i></span>
                                 </Tooltip>
-                            </div>
+                            </div> */}
                             
                            
                         </div>
