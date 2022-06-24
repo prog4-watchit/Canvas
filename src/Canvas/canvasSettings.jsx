@@ -7,9 +7,10 @@ import VerticalSlider from "./VerticalSlider";
 import './canvas.scss'
 
 function Canvas({ width = 600, height = 320 }) {
-    let his = 1;
+
     const canvasWidth = width;
     const canvasHeight = height;
+    const [arrowsOpacity , setArrowsOpacity] = useState({arrowBack:0.5 , arrowForward:0.5})
     const [canvasPrev, setCanvasPrev] = useState([]);
     const [isDisplayFill, setIsDisplayFill] = useState(false);
     const [color, setColor] = useState("#000000")
@@ -31,7 +32,7 @@ function Canvas({ width = 600, height = 320 }) {
     })
     const [lineWidth, setLineWidth] = useState(2);
     const [buttonsState, setButtonsState] = useState(DefaultButtonsState(activeBtn, setActiveBtn))
-
+    
     return (
         
         <div className="row canvas-bg ps-3  m-0" >
@@ -44,12 +45,21 @@ function Canvas({ width = 600, height = 320 }) {
                         <div className="col-6  m-0 d-flex align-content-end flex-wrap">
                             <div onClick ={() => setActiveBtn(prev => ({...prev , back:true}) )}>
                                 <Tooltip title={"Назад"} placement="bottom">
-                                    <span><i className="fas fa-reply canvas-condition pe-3"></i></span>
+                                    <span style ={{
+                                            opacity:canvasPrev.length > 2 ? "1" : "0.5"
+                                        }} >
+                                        <i className="fas fa-reply canvas-condition pe-3"></i>
+                                    </span>
                                 </Tooltip>
                             </div>
                             {/* <div onClick ={() => setActiveBtn(prev => ({...prev , forward:true}) )}>
                                 <Tooltip title={"Вперед"} placement="bottom">
-                                    <span><i className="fas fa-share canvas-condition"></i></span>
+                                    <span 
+                                        style ={{
+                                            opacity:arrowsOpacity.arrowForward
+                                        }}>
+                                            <i className="fas fa-share canvas-condition"></i>
+                                        </span>
                                 </Tooltip>
                             </div> */}
                             
@@ -93,7 +103,7 @@ function Canvas({ width = 600, height = 320 }) {
                     <div className="col-12 px-0">
                     <div className="canvas-body">
                         <UseCanvas
-                            his = {his}
+                         
                             color={color}
                             selectFillColor={selectFillColor}
                             lineWidth={lineWidth}
@@ -103,6 +113,8 @@ function Canvas({ width = 600, height = 320 }) {
                             canvasHeight={canvasHeight}
                             canvasPrev = {canvasPrev}
                             setCanvasPrev = {setCanvasPrev}
+                            arrowsOpacity={arrowsOpacity}
+                            setArrowsOpacity = {setArrowsOpacity}
 
                         />
                     </div>
