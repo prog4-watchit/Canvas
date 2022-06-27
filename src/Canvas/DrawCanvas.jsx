@@ -2,8 +2,8 @@ import React, { useRef, useEffect } from 'react'
 import "./canvas.scss"
 import { useState } from 'react'
 
-/* Функция отрисовки */
-
+/*Функция отрисовки*/
+let x = 0 , y = 0
 function Canvas({ color, lineWidth, activeBtn, setActiveBtn, 
     selectFillColor, canvasWidth, canvasHeight , canvasPrev ,
     setCanvasPrev , setArrowsOpacity , arrowsOpacity }) {
@@ -14,26 +14,22 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
     const [current, setCurrent] = useState(10);
     const [inputText, setInputText] = useState({ text: "", x: null, y: null })
     const [PrevInputText, PrevSetInputText] = useState({ text: "", x: null, y: null })
-   
 
-    let ctx, ctxDraw , x = 2
+    let ctx, ctxDraw
     const[history , setHistory] = useState(1)
 
-    useEffect(() => {
-       // savePrevCanvasState()
-        
-    }, [])
    const savePrevCanvasState =() => {
-
+            y++
+            console.log(y)
+            if(y > 2 ) {
+                setArrowsOpacity(prev => ({...prev,  arrowBack: 1 }))
+            } 
+           
             setHistory(1)
             let image = new Image();
             image.src = canvasRef.current.toDataURL("image/png");
-            if (history < 100) setCanvasPrev(prev => [...prev, image.src])
-            
-           
-            
-            x > 2 ? setArrowsOpacity(prev => ({...prev,  arrowBack: "1" })) : void 0
-            x++
+            setCanvasPrev(prev => [...prev, image.src])
+ 
     }
   
 
@@ -77,7 +73,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
 
     }, [activeBtn , lineWidth])
 
-    
     const handleDrawing = () => {
         
 
@@ -133,7 +128,7 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctx.lineTo(x, y);
                     ctx.stroke()
                 }
-                setArrowsOpacity(prev => ({ ...prev , arrowBack: 1 }) )
+          
                 canvasRef.current.onmouseup = () => { canvasRef.current.onmousemove = null; savePrevCanvasState() }
                 canvasRef.current.onmouseleave = () => canvasRef.current.onmousemove = null
             }
@@ -318,7 +313,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
                     ctxDraw.moveTo(fromx, fromy)
                     ctxDraw.lineTo(tox, toy);
                     ctxDraw.stroke()
-
                 }
                 canvasRef2.current.onmouseup = (e) => {
                     ctxDraw.clearRect(0, 0, canvasWidth, canvasHeight)
@@ -368,7 +362,6 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
             ctx.fillRect(0, 0, canvasWidth, canvasHeight)
             setActiveBtn(prev => ({ ...prev, clean: false }))
             setInputText(prev => ({ ...prev, text: ""}))
-            savePrevCanvasState();
         }
         if (activeBtn.bgColor) {
             selectFillColor === undefined ? ctx.fillStyle = "#ffffff" : ctx.fillStyle = selectFillColor
@@ -390,61 +383,92 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
         }
         
         if(activeBtn.forward){
-            // history <= 2 ?  setArrowsOpacity(prev => ({ ...prev , arrowForward: 0.5 })  ) : setArrowsOpacity(prev => ({ ...prev , arrowForward: 1 })  )
-            // history + 1 >= canvasPrev.length ?  setArrowsOpacity(prev => ({ ...prev , arrowBack: 0.5 })  ) : setArrowsOpacity(prev => ({ ...prev , arrowBack: 1 })  )
-          //  setHistory(history < 1 ? 1 : history - 1)
-            setHistory(prev => prev < 1 ? 1 : prev -1)
-          
-
-            let image = new Image();
-            image.src = canvasPrev[(canvasPrev.length  - history + 1 ) < 0 ? 0 : canvasPrev.length  - history + 1]
-            
+                x--
+                y++ 
            
-            // image.onload = function() {
-            //     ctx.drawImage(image, 0, 0);
-            // };
+            if(y > canvasPrev.length) {
+                y = canvasPrev.length
+                console.log("canvasPrev.length ",canvasPrev.length)
+                console.log("y ",y)
+            }
+            else {
+                
+                // y > canvasPrev.length ? y = canvasPrev.length : void 0
+                x < 0 ? x = 0 : void 0
+                console.log("canvasPrev.length ",canvasPrev.length)
+                console.log("y ",y)
+                setHistory(prev => prev < 1 ? 1 : prev -1)
+                history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
+                
+                let image = new Image();
+                image.src = canvasPrev[(canvasPrev.length  - history + 1 ) < 0 ? 0 : canvasPrev.length  - history + 1]
+                
             
-            setActiveBtn(prev => ({...prev , forward:false}) ) 
-            history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
-            console.log(history)
+                image.onload = function() {
+                    ctx.drawImage(image, 0, 0);
+                };
+                
+                setActiveBtn(prev => ({...prev , forward:false}) ) 
+                
+                
+
+                if(x  === 0)
+                {
+                    setArrowsOpacity(prev => ({...prev,  arrowForward: 0.5 }))
+                }
+                if( y  != 2) {
+                    setArrowsOpacity(prev => ({...prev,  arrowBack: 1 }))
+                }
+                
+           
+            }
             
             
         }
         if(activeBtn.back){
-            // history <= 2 ?  setArrowsOpacity(prev => ({ ...prev , arrowForward: 0.5 })  ) : setArrowsOpacity(prev => ({ ...prev , arrowForward: 1 })  )
-            // history + 2 >= canvasPrev.length ?  setArrowsOpacity(prev => ({ ...prev , arrowBack: 0.5 })  ) : setArrowsOpacity(prev => ({ ...prev , arrowBack: 1 })  )
-            //history + 2 <= canvasPrev.length ? alert(1) : void 0
-            setArrowsOpacity(prev => ({ ...prev , arrowBack: 1 }) )
-           
-            history < 0 ? setHistory(1) : void 0
-           
+            x++
+            y--
+            
+            y < 2 ? y = 2 : void 0
+            x > canvasPrev.length ? x = canvasPrev.length : void 0
+            console.log(y)
+            history < 0 ? setHistory(prev => prev +1) : void 0
 
             let image = new Image();
-            image.src = canvasPrev[(canvasPrev.length  - history -1) < 0 ? 0 : canvasPrev.length  - history -1]
+            image.src = canvasPrev[(canvasPrev.length - 1 - history) < 0 ? 0 : canvasPrev.length - 1 - history]
             
-              
             image.onload = function() {
                 ctx.drawImage(image, 0, 0);
             };
             setActiveBtn(prev => ({...prev , back:false}) )
-            //setCanvasPrev(canvasPrev.splice(-1,1))
-            canvasPrev.length <= 2 || history > canvasPrev.length -2  ? 
-            setArrowsOpacity(prev => ({ ...prev , arrowBack: 0.5 }) ) 
-                :
+
+            history > canvasPrev.length ? setHistory(canvasPrev.length) : void 0
+
             setHistory(prev => prev < 0 ? 1 : prev + 1)
-           
-            x--
-            console.log(x)
+        
+          
+
+            if(x > 0)
+            {
+               setArrowsOpacity(prev => ({...prev,  arrowForward: 1 }))
+            }
+            
+            if( y  === 2) {
+                setArrowsOpacity(prev => ({...prev,  arrowBack: 0.5 }))
+            }
+            
+            
         }
     }
     
+    
   
+ 
     
     return (
         <>
             <form onChange={(e) => {
                
-
             }}>
 
                 <canvas id="canvas2" ref={canvasRef2} width={canvasWidth} height={canvasHeight}
