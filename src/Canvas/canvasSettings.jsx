@@ -43,16 +43,16 @@ function Canvas({ width = 600, height = 320 }) {
                 <div className="row mw-100  m-0">
                     
                         <div className="col-6  m-0 d-flex align-content-end flex-wrap">
-                            <div onClick ={() => setActiveBtn(prev => ({...prev , back:true}) )}>
+                            <div onClick ={() => arrowsOpacity.arrowBack < 1 ? false : setActiveBtn(prev => ({...prev , back:true}) )}>
                                 <Tooltip title={"Назад"} placement="bottom">
                                     <span style ={{
-                                            opacity:canvasPrev.length > 2 ? "1" : "0.5"
+                                            opacity:arrowsOpacity.arrowBack
                                         }} >
                                         <i className="fas fa-reply canvas-condition pe-3"></i>
                                     </span>
                                 </Tooltip>
                             </div>
-                            <div onClick ={() => setActiveBtn(prev => ({...prev , forward:true}) )}>
+                            <div onClick ={() => arrowsOpacity.arrowForward < 1 ? false : setActiveBtn(prev => ({...prev , forward:true}) )}>
                                 <Tooltip title={"Вперед"} placement="bottom">
                                     <span 
                                         style ={{
