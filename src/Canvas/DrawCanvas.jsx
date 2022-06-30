@@ -4,6 +4,19 @@ import { useState } from 'react'
 
 /*Функция отрисовки*/
 let x = 0 , y = 0
+
+   
+//генерация случайных символов
+function makeRandomUrl() {
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let i = 30
+    while(i--)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+  }
+ 
+
 function Canvas({ color, lineWidth, activeBtn, setActiveBtn, 
     selectFillColor, canvasWidth, canvasHeight , canvasPrev ,
     setCanvasPrev , setArrowsOpacity , arrowsOpacity }) {
@@ -372,13 +385,41 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
         }
         if (activeBtn.save) {
             ctxDraw.fillText(inputText.text, inputText.x, inputText.y)
-            let canvasUrl = canvasRef.current.toDataURL("image/jpeg", 1);
-            const createEl = document.createElement('a');
-            createEl.href = canvasUrl;
-            createEl.download = "download-this-canvas";
-            createEl.click();
-            createEl.remove();
-            setActiveBtn(prev => ({ ...prev, save: false }))
+            let canvasUrl = canvasRef.current.toDataURL("image/jpeg", 1)
+            canvasUrl = { "img":String(canvasUrl) }
+                       
+            console.log(JSON.stringify(canvasUrl))
+            const url = 'https://example.com/profile';
+
+            const requestObject = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(canvasUrl),
+            }
+            
+
+            try {
+                const response =  fetch(url, requestObject)
+                if (!response.ok) {
+                    throw new Error('Ответ сети был не ok.');
+                }
+                const json =  response.json();
+                let answer = "www.imageplacement/"+makeRandomUrl()
+                //frameCommunicationSend({'action': 'send', 'message':answer})
+
+            } catch (error) {
+                console.error("поймал ошибку",error)
+            }
+            
+
+            // const createEl = document.createElement('a');
+            // createEl.href = canvasUrl;
+            // createEl.download = "download-this-canvas";
+            // createEl.click();
+            // createEl.remove();
+            // setActiveBtn(prev => ({ ...prev, save: false }))
 
         }
         
@@ -493,3 +534,53 @@ function Canvas({ color, lineWidth, activeBtn, setActiveBtn,
 }
 
 export default Canvas
+/*
+// функция инициализации коммуникации с основным окном
+function frameCommunicationInit()
+{
+    if (!window.frameCommunication)
+   {
+      window.frameCommunication = {timeout: {}};
+   }
+   if(typeof window.postMessage === 'function')
+   {
+      window.addEventListener('message', function(event){
+         var data = {};
+         try { data = JSON.parse(event.data); } catch (err){}
+
+         if (data.action == 'init')
+         {
+            frameCommunication.uniqueLoadId = data.uniqueLoadId;
+            frameCommunication.postMessageSource = event.source;
+            frameCommunication.postMessageOrigin = event.origin;
+         }
+      });
+   }
+}
+
+// функция отправки данных в основное окно
+function frameCommunicationSend(data)
+{
+   data['uniqueLoadId'] = frameCommunication.uniqueLoadId;
+   var encodedData = JSON.stringify(data);
+   if (!frameCommunication.postMessageOrigin)
+   {
+      clearTimeout(frameCommunication.timeout[encodedData]);
+      frameCommunication.timeout[encodedData] = setTimeout(function(){
+         frameCommunicationSend(data);
+      }, 10);
+      return true;
+   }
+   
+   if(typeof window.postMessage === 'function')
+   {
+      if(frameCommunication.postMessageSource)
+      {
+         frameCommunication.postMessageSource.postMessage(
+            encodedData,
+            frameCommunication.postMessageOrigin
+         );
+      }
+   }
+}
+frameCommunicationInit(); */
