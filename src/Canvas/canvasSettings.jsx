@@ -159,7 +159,7 @@ function Canvas({ width = 600, height = 320 }) {
                         <div className="canvas-tools " style={{ userSelect: "none" }}>
                                     {
                                         buttonsState.
-                                            filter(item => item.id !== "save" && item.id !== "clean").map((b, i) => (
+                                            filter(item => item.id !== "save" && item.id !== "clean" && item.id !== "close").map((b, i) => (
                                                 <div className=" d-flex justify-content-center align-items-center" id={activeBtn[b.id] ? "scaleZ" : ""}
                                                     style={{
                                                         minHeight: "30px",
