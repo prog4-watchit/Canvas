@@ -25,6 +25,7 @@ function Canvas({ width = 600, height = 320 }) {
         erase: false,
         arrow: false,
         save: false,
+        close: false,
         clean: false,
         bgColor: true,
         forward: false,
@@ -69,7 +70,7 @@ function Canvas({ width = 600, height = 320 }) {
                         <div className="col-6 d-flex justify-content-end">
                             {
                                 buttonsState.
-                                    filter(item => item.id === "save" || item.id === "clean").map((b, i) => (
+                                    filter(item => item.id === "save" || item.id === "clean" || item.id === "close" ).map((b, i) => (
                                         <div className="d-flex justify-content-center align-items-center" id={activeBtn[b.id] ? "scaleZ" : ""}
                                             style={{
                                                 minHeight: "30px",

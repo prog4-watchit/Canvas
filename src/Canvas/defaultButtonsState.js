@@ -138,21 +138,33 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
       onClick : () => {return true}
   
       },
-       {
+      {
          id:"save",
          tooltip : "Сохранить",
          active :activeBtn.save,
          inner:() => <i className="far fa-save"></i>,
          onClick : () => setActiveBtn({save:true }),
-       },
+      },
        
-       {
+      {
         id:"clean",
         tooltip : "Удалить все",
         active :activeBtn.clean,
-        inner: () => <i className="fas fa-times"></i>,
+        inner: () => <i class="fas fa-broom"></i>,
         onClick : () => setActiveBtn(prev =>({...prev, clean:true}))
-    },
+      },
+      {
+        id:"close",
+        tooltip : "Закрыть",
+        active :activeBtn.close,
+        inner: () => <i className="fas fa-times"></i>,
+        onClick : () => {
+            setActiveBtn(prev =>({...prev, clean:true}))
+            window.opener = null;
+            window.open("", "_self");
+            window.close();
+        }
+      },
     
     {
         id:"bgColor",
