@@ -152,7 +152,7 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
         id:"clean",
         tooltip : "Очистка холста",
         active :activeBtn.clean,
-        inner: () => <i class="fas fa-broom"></i>,
+        inner: () => <i className="fas fa-broom"></i>,
         onClick : () => setActiveBtn(prev =>({...prev, clean:true}))
       },
       {
