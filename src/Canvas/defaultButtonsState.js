@@ -140,15 +140,17 @@ function DefaultButtonsState(activeBtn, setActiveBtn){
       },
       {
          id:"save",
-         tooltip : "Сохранить",
+         tooltip : "Отправка готового рисунка",
          active :activeBtn.save,
-         inner:() => <i className="far fa-save"></i>,
+         inner:() => <i className="far fa-save" style={{
+            color:"#1976d2"
+         }}></i>,
          onClick : () => setActiveBtn({save:true }),
       },
        
       {
         id:"clean",
-        tooltip : "Удалить все",
+        tooltip : "Очистка холста",
         active :activeBtn.clean,
         inner: () => <i class="fas fa-broom"></i>,
         onClick : () => setActiveBtn(prev =>({...prev, clean:true}))

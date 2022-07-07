@@ -36,7 +36,7 @@ function Canvas({ width = 600, height = 320 }) {
     
     return (
         
-        <div className="row canvas-bg ps-3  m-0" >
+        <div className="row canvas-bg ps-3  m-0 " >
             <div className={width > 300 ? "col-11 px-0" : "col-9 px-0" } style={{
                 width:width
             }}>
